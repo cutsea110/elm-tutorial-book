@@ -39,6 +39,7 @@ init =
 type Msg
     = Input String
     | Submit
+    | Delete Int
 
 
 update : Msg -> Model -> Model
@@ -55,6 +56,19 @@ update msg model =
                 , memos = model.input :: model.memos
             }
 
+        Delete idx ->
+            { model
+                | memos =
+                    let
+                        hd =
+                            List.take idx model.memos
+
+                        tl =
+                            List.drop (idx + 1) model.memos
+                    in
+                    hd ++ tl
+            }
+
 
 
 -- VIEW
@@ -68,10 +82,10 @@ view model =
             , button [ disabled (String.length model.input < 1) ]
                 [ text "Submit" ]
             ]
-        , ul [] (List.map viewMemo model.memos)
+        , ul [] (List.indexedMap viewMemo model.memos)
         ]
 
 
-viewMemo : String -> Html Msg
-viewMemo memo =
-    li [] [ text memo ]
+viewMemo : Int -> String -> Html Msg
+viewMemo idx memo =
+    li [ onClick (Delete idx) ] [ text memo ]
