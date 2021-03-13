@@ -20,7 +20,12 @@ header =
 content : Html msg
 content =
     ul []
-        [ li [] [ a [ href "https://elm-lang.org" ] [ text "Homepage" ] ]
-        , li [] [ a [ href "https://package.elm-lang.org" ] [ text "Packages" ] ]
-        , li [] [ a [ href "https://ellie-app.com" ] [ text "Playground" ] ]
+        [ linkItem "https://elm-lang.org" "Homepage"
+        , linkItem "https://package.elm-lang.org" "Packages"
+        , linkItem "https://ellie-app.com" "Playground"
         ]
+
+
+linkItem : String -> String -> Html msg
+linkItem url text_ =
+    li [] [ a [ href url ] [ text text_ ] ]
