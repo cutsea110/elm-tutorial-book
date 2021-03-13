@@ -138,20 +138,40 @@ view model =
                 text "Waiting..."
 
             Loaded user ->
-                a
-                    [ href user.htmlUrl
-                    , target "_blank"
-                    ]
-                    [ img [ src user.avatarUrl, width 200 ] []
-                    , div [] [ text user.name ]
-                    , div []
-                        [ case user.bio of
-                            Just bio ->
-                                text bio
-
-                            Nothing ->
-                                text ""
+                div
+                    []
+                    [ a
+                        [ href user.htmlUrl
+                        , target "_blank"
                         ]
+                        [ img [ src user.avatarUrl, width 200 ] []
+                        , div []
+                            [ case user.name of
+                                Just name ->
+                                    text name
+
+                                Nothing ->
+                                    text user.login
+                            ]
+                        , div []
+                            [ case user.bio of
+                                Just bio ->
+                                    text bio
+
+                                Nothing ->
+                                    text ""
+                            ]
+                        ]
+                    , case user.twitterUsername of
+                        Just acc ->
+                            a
+                                [ href ("https://twitter.com/" ++ acc)
+                                , target "_blank"
+                                ]
+                                [ text ("@" ++ acc) ]
+
+                        Nothing ->
+                            text ""
                     ]
 
             Failed error ->
@@ -166,17 +186,19 @@ view model =
 type alias User =
     { login : String
     , avatarUrl : String
-    , name : String
+    , name : Maybe String
     , htmlUrl : String
     , bio : Maybe String
+    , twitterUsername : Maybe String
     }
 
 
 userDecoder : Decoder User
 userDecoder =
-    D.map5 User
+    D.map6 User
         (D.field "login" D.string)
         (D.field "avatar_url" D.string)
-        (D.field "name" D.string)
+        (D.maybe (D.field "name" D.string))
         (D.field "html_url" D.string)
         (D.maybe (D.field "bio" D.string))
+        (D.maybe (D.field "twitter_username" D.string))
