@@ -49,7 +49,8 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    case msg of
+    -- msg がどう変化するか確認
+    case Debug.log "msg" msg of
         -- 画面遷移のリクエストを受けたとき
         LinkClicked urlRequest ->
             case urlRequest of
@@ -91,9 +92,9 @@ view model =
         , ul []
             [ viewLink "/home"
             , viewLink "/profile"
-            , viewLink "/reviews/the-century-of-the-self"
-            , viewLink "/reviews/public-opinion"
-            , viewLink "/reviews/shah-of-shahs"
+            , viewLink "/members?q=jinjor"
+            , viewLink "#foo"
+            , viewLink "https://github.com"
             ]
         ]
     }
