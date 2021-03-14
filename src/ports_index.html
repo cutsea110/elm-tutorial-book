@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Port</title>
+    <script src="ports_elm.js"></script>
+  </head>
+  <body>
+    <div id="elm-node"></div>
+    <script type="text/javascript">
+      var app = Elm.Ports.init({
+	  node: document.getElementById("elm-node")
+      });
+      // Elm 側からメッセージを受け取る
+      app.ports.confirm.subscribe(function(message) {
+        var answer = confirm(message);
+        // Elm 側に返事を返す
+        app.ports.receiveAnswer.send(answer);
+      });
+    </script>
+  </body>
+</html>  
